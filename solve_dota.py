@@ -1,11 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Spyder Editor
-
-This temporary script file is located here:
-/tmp/guest-Zx1l9V/.spyder2/.temp.py
-"""
-
 import numpy
 from sklearn import svm
 from sklearn.svm import SVC
@@ -23,7 +16,7 @@ for line in f:
         if not chardict.has_key(ch):
             chardict[ch] = encounternr
             encounternr+=1
-            
+
 
 f.close()
 
@@ -40,16 +33,16 @@ for line in f:
         # now distinguish: <=4 or higher
         ch=chars[chnr]
         X[linenr,chardict[ch]+((chnr<=4)*fvecsize)]=1
-    
+
     y[linenr]=int(chars[-1]) # result: int(chars[-1])
-    linenr+=1       
+    linenr+=1
 
 
 y2=numpy.ravel(y-1)
 
 # third step: classifier
-clf = svm.SVC()  
-clf.fit(X, y2)  
+clf = svm.SVC()
+clf.fit(X, y2)
 
 clf.score(X,y2)
 # 0.61771405600964757
@@ -65,8 +58,8 @@ for line in f:
         # now distinguish: <=4 or higher
         ch=chars[chnr]
         X_test[linenr,chardict[ch]+((chnr<=4)*fvecsize)]=1
-    
-    linenr+=1       
+
+    linenr+=1
 
 
 y_test_spec=clf.predict(X_test)
