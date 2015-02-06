@@ -5,5 +5,4 @@ Challenge described at https://www.hackerrank.com/challenges/dota2prediction
 
 Training set available at https://s3.amazonaws.com/hr-testcases/368/assets/trainingdata.txt
 
-
-
+Reaching 98 percent accuracy on training data set. 
