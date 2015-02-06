@@ -4,9 +4,8 @@ Solution for the Dota2 challenge. See readme.
 """
 
 import numpy
-from sklearn import svm
-from sklearn.svm import SVC
 from sklearn import ensemble
+from sklearn import cross_validation
 import os
 
 
@@ -29,8 +28,8 @@ f.close()
 
 # second step: read data and write them to feature vectors
 fvecsize=len(chardict.keys())
-X = numpy.zeros(shape=([15000,fvecsize*2])) # do wc -l trainingdata.txt
-y = numpy.zeros(shape=([15000,1]))
+X = numpy.zeros(shape=([14926,fvecsize*2])) # do wc -l trainingdata.txt
+y = numpy.zeros(shape=([14926,1]))
 linenr=0
 f = open(os.path.join(os.getcwd(), 'trainingdata.txt'), 'r')
 for line in f:
@@ -47,36 +46,34 @@ for line in f:
 y2=numpy.ravel(y-1)
 
 # third step: classifier
-clf = ensemble.RandomForestClassifier()
+clf = ensemble.RandomForestClassifier(n_estimators=100,max_features=None,min_samples_leaf=2)
 clf.fit(X, y2)
 clf.score(X,y2)
 # 0.98433333333333328
 
 
-#accs=[]
-#for C in xrange(1,10):
-#    clf = svm.SVC(C=C)
-#    clf.fit(X, y2)
-#    accs.append(clf.score(X,y2))
+
+# last step: test data
+X_test = numpy.zeros(shape=([74,fvecsize*2]))
+y_test = numpy.zeros(shape=([74,1]))
+linenr=0
+f = open(os.path.join(os.getcwd(), 'testdata.txt'), 'r')
+for line in f:
+    chars=line.split(',')
+    for chnr in xrange(0,size(chars)-1):
+        # now distinguish: <=4 or higher
+        ch=chars[chnr]
+        X_test[linenr,chardict[ch]+((chnr<=4)*fvecsize)]=1
+        
+    y_test[linenr]=int(chars[-1]) # result: int(chars[-1])
+    linenr+=1
 
 
-# 0.61771405600964757
+y_test=numpy.ravel(y_test-1)
 
+y_test_spec=clf.predict(X_test)
+print(sum(y_test_spec==y_test)/size(y_test))
+#0.51351351351351349
 
-## last step: test data
-#X_test = numpy.zeros(shape=([74,fvecsize*2]))
-#linenr=0
-#f = open('/tmp/guest-Zx1l9V/Desktop/Dota2/test.txt', 'r')
-#for line in f:
-#    chars=line.split(',')
-#    for chnr in xrange(0,size(chars)-1):
-#        # now distinguish: <=4 or higher
-#        ch=chars[chnr]
-#        X_test[linenr,chardict[ch]+((chnr<=4)*fvecsize)]=1
-#
-#    linenr+=1
-#
-#
-#y_test_spec=clf.predict(X_test)
 
 
